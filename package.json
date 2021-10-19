@@ -10,6 +10,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "koa": "^2.13.3"
+    "dotenv": "^10.0.0",
+    "email-validator": "^2.0.4",
+    "koa": "^2.13.3",
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "^10.1.1",
+    "password-validator": "^5.1.1"
+  },
+  "devDependencies": {
+    "@types/koa-router": "^7.4.4"
   }
 }
