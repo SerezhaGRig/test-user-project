@@ -1,4 +1,4 @@
-const users = require('./model')
+const users = require('../Model/model')
 
 module.exports = {
     index : (ctx, next) => {
