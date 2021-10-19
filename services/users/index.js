@@ -12,19 +12,19 @@ class Service{
     static hello(){
         return 'Hello World!';
     }
-    static register(user_data){
-        if(!validator.validate(user_data.login)){
+    static register(login, password, username){
+        if(!validator.validate(login)){
             return "Input value wasn't email"
         }
-        if(!schema.validate(user_data.password)){
+        if(!schema.validate(password)){
             return "Password minimum length is 8"
         }
-        let user = User.userFromJs(user_data)
+        let user = new User(login, password, username)
         users.push(user)
         return "Congratulation"
     }
-    static login(user_data){
-        let user = User.userFromJs(user_data)
+    static login(login, password){
+        let user = new User(login, password)
         if(users.find((element)=>(element.login===user.login && element.password === user.password)))
             return 'Hello World!';
         else

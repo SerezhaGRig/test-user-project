@@ -4,11 +4,12 @@ class Controller{
     static index(){
         return Service.hello();
     }
-    static register(user_data){
-        return Service.register(user_data)
+    static register(login, password, username){
+        return Service.register(login, password, username)
+
     }
-    static login(user_data){
-        return Service.login(user_data)
+    static login(login, password){
+        return Service.login(login, password)
     }
 }
 module.exports = Controller
