@@ -1,5 +1,5 @@
-const users = require('../../Model/model')
-const service = require('../../Services/users/index')
+const users = require('../../model/model')
+const service = require('../../services/users/index')
 
 module.exports = {
     index : () => {

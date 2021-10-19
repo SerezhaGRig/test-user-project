@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-const handlers=require('../../Controller/users/index')
+const handlers=require('../../controller/users/index')
 const router = new Router();
 
 router.get('/', (ctx, next) => {
