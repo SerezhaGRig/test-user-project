@@ -2,18 +2,14 @@
 
 const Koa = require('koa');
 const app = new Koa();
-const router = require('./routing')
-const bodyParser = require('koa-bodyparser');
-const settings = require('./settings')
-
-console.log(("it will break marging"));
+const port = 1234
 
 
-app
-    .use(bodyParser())
-    .use(router.routes())
-    .use(router.allowedMethods())
-    .listen(settings.port,function () {
-        console.log(`Example app listening at http://localhost:${settings.port}`)
-    })
+console.log(("it will break marging"))
+app.use(ctx => {
+    ctx.body = 'Hello World';
+});
 
+app.listen(port,function () {
+    console.log(`Example app listening at http://localhost:${port}`)
+})
