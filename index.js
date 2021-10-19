@@ -2,19 +2,14 @@
 
 const Koa = require('koa');
 const app = new Koa();
-const router = require('./Routers/routing');
-const bodyParser = require('koa-bodyparser');
-require("dotenv").config();
+const port = 1234
 
-console.log(("it will break marging"));
 
-const port = process.env.PORT || 3000
+console.log(("it will break marging"))
+app.use(ctx => {
+    ctx.body = 'Hello World';
+});
 
-app
-    .use(bodyParser())
-    .use(router.routes())
-    .use(router.allowedMethods())
-    .listen(port,function () {
-        console.log(`Example app listening at http://localhost:${port}`)
-    })
-
+app.listen(port,function () {
+    console.log(`Example app listening at http://localhost:${port}`)
+})
