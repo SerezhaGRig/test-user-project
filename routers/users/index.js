@@ -7,6 +7,12 @@ router.get('/', (ctx, next) => {
 },)
 router.post('/register', (ctx, next) => {
     const { body:{ login, password, username } } = ctx.request;
+    if(!validator.validate(login)){
+        ctx.body = "Input value wasn't email"
+    }
+    if(!schema.validate(password)){
+        ctx.body = "Password minimum length is 8"
+    }
     ctx.body = Controller.register(login, password, username );
 },)
 router.post('/login', (ctx, next) => {

@@ -13,12 +13,6 @@ class Service{
         return 'Hello World!';
     }
     static register(login, password, username){
-        if(!validator.validate(login)){
-            return "Input value wasn't email"
-        }
-        if(!schema.validate(password)){
-            return "Password minimum length is 8"
-        }
         let user = new User(login, password, username)
         users.push(user)
         return "Congratulation"
