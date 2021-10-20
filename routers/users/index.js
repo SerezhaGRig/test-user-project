@@ -24,5 +24,10 @@ router.post('/login', (ctx, next) => {
     const { body:{ login, password } } = ctx.request;
     ctx.body = Controller.login(login, password);
 },)
+router.post('/rename', (ctx, next) => {
+    const { body:{ newName } } = ctx.request;
+    const token = ctx.request.headers.authorization.slice(7)
+    ctx.body = Controller.rename(token, newName);
+},)
 
 module.exports = router
