@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const Controller=require('../../controller/users/index')
 const validator = require("email-validator");
 const passwordValidator = require("password-validator");
+const CryptoJS = require("crypto-js");
 
 const router = new Router();
 const schema = new passwordValidator();
@@ -18,11 +19,12 @@ router.post('/register', (ctx, next) => {
     if(!schema.validate(password)){
         ctx.body = "Password minimum length is 8"
     }
-    ctx.body = Controller.register(login, password, username );
+    ctx.body = Controller.register(login,  CryptoJS.MD5(password).toString(), username );
 },)
 router.post('/login', (ctx, next) => {
     const { body:{ login, password } } = ctx.request;
-    ctx.body = Controller.login(login, password);
+    ctx.body = Controller.login(login, CryptoJS.MD5(password).toString());
+
 },)
 router.post('/rename', (ctx, next) => {
     const { body:{ newName } } = ctx.request;

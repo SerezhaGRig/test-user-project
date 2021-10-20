@@ -10,13 +10,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
     "email-validator": "^2.0.4",
     "koa": "^2.13.3",
     "koa-bodyparser": "^4.3.0",
     "koa-jwt": "^4.0.3",
     "koa-router": "^10.1.1",
-    "password-validator": "^5.1.1"
+    "password-validator": "^5.1.1",
+    "pino": "^7.0.3",
+    "pino-pretty": "^7.1.0"
   },
   "devDependencies": {
     "@types/koa-router": "^7.4.4"

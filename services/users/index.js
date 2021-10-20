@@ -1,11 +1,13 @@
 const User = require('../../model/model')
 const {jwtToken,jwtValidate} = require('../../utils/jwt')
+const logger = require('../../utils/logger')
+
 
 let users = []
 
 class Service{
     static hello(){
-        console.log(users)
+        logger.info(users)
         return 'Hello World!';
     }
     static register(login, password, username){
@@ -15,7 +17,7 @@ class Service{
     }
     static login(login, password){
         let user = new User(login, password)
-        if(users.find((element)=>(element.login===user.login && element.password === user.password))){
+        if(users.find((element)=>(element.login === user.login && element.password === user.password))){
             const token = jwtToken(login)
             return {
                 token,
@@ -36,7 +38,7 @@ class Service{
 
         }
         catch (e){
-            console.log(e)
+            logger.info(e.message)
         }
         return 'Token validation error'
     }
