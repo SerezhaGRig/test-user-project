@@ -1,13 +1,11 @@
 const User = require('../../model/model')
-var validator = require("email-validator");
-var passwordValidator = require("password-validator");
-var schema = new passwordValidator();
+const {jwtToken} = require('../../utils/jwt')
+
+
 
 
 let users = []
 
-schema
-    .is().min(8)
 class Service{
     static hello(){
         return 'Hello World!';
@@ -19,10 +17,15 @@ class Service{
     }
     static login(login, password){
         let user = new User(login, password)
-        if(users.find((element)=>(element.login===user.login && element.password === user.password)))
-            return 'Hello World!';
-        else
-            return 'Unautorized'
+        users.find((element)=>(element.login===user.login && element.password === user.password))
+        if(users.find((element)=>(element.login===user.login && element.password === user.password))){
+            const token = jwtToken(login)
+            return {
+                token,
+                login
+            };
+        }
+        return 'Unautorized'
     }
 }
 

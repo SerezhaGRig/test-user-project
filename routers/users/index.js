@@ -1,6 +1,11 @@
 const Router = require('koa-router');
 const Controller=require('../../controller/users/index')
+const validator = require("email-validator");
+const passwordValidator = require("password-validator");
+
 const router = new Router();
+const schema = new passwordValidator();
+schema.is().min(8)
 
 router.get('/', (ctx, next) => {
     ctx.body = Controller.index();
