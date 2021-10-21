@@ -11,8 +11,8 @@ class Controller{
     static login({login, password}){
         return Service.login({login, password})
     }
-    static rename({ newName}){
-        return Service.rename({token, newName,login})
+    static rename({ newName,login}){
+        return Service.rename({newName,login})
     }
 }
 module.exports = Controller
