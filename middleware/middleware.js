@@ -1,34 +1,32 @@
 const {jwtValidate}=require('../services/auth/jwt')
 
 module.exports = {
-    authMiddleware: (ctx, next) => {
+    authMiddleware: async (ctx, next) => {
         const authHeader = ctx.request.headers.authorization
         if (authHeader) {
             const token = authHeader.slice(7);
             try {
                 const {sub} = jwtValidate(token)
                 ctx.request.sub = sub;
-                next();
+                await next();
             } catch (e) {
-                ctx.customError = e;
-                next()
+                ctx.body = e.message;
             }
 
         } else {
-            ctx.customError = "auth header doesnt exist";
-            next()
+            ctx.body = "auth header doesnt exist";
         }
     },
-    errorMiddleware: (ctx, next) => {
+    errorMiddleware: async (ctx, next) => {
         ctx.status = 404
-        ctx.body = ctx.customError.message
+        ctx.body = ctx.myData.error.message
     },
-    responseMiddleware: (ctx, next) => {
-        if (ctx.customError) {
-            next()
+    responseMiddleware: async (ctx, next) => {
+        if (ctx.myData.error) {
+            await next()
         } else {
             ctx.status = 200
-            ctx.body = ctx.myData
+            ctx.body = ctx.myData.result
         }
     }
 }

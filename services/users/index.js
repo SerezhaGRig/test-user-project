@@ -1,38 +1,52 @@
-const User = require('../../model/model')
 const {jwtToken}=require('../auth/jwt')
 const logger = require('../../utils/logger')
 const CryptoJS = require("crypto-js");
+const {Users} = require('../../models/index')
+const {Op} = require('sequelize')
 
 let users = {}
 
 class Service{
-    static hello(){
-        logger.info(users)
-        return 'Hello World!';
+    static async hello(){
+        return {result:'Hello World!'};
     }
-    static register({login, password, username}){
-        let user = new User(login, CryptoJS.MD5(password).toString(), username)
-        users[login]=user
-        return "Congratulation"
-    }
-    static login({login, password}){
-        let user = new User(login, CryptoJS.MD5(password).toString())
-        if(users[user.login] && users[user.login].password === user.password){
-            const token = jwtToken(login)
-            return {
-                token,
-                login
-            };
+    static async register({login, password, username}){
+        try{
+            await Users.create({login, password:CryptoJS.MD5(password).toString(), username});
         }
-        return 'Unautorized'
+        catch (e){
+            return {error:e}
+        }
+        return {result:"Congratulation"}
     }
-    static rename({newName,login}){
-            const user = users[login]
-            if(user){
-                user.username = newName;
-                return 'Sucsessifully renamed'
+    static async login({login, password}){
+        let user  = await Users.findOne({
+                where: {
+                    [Op.and]: [
+                        { login },
+                        { password:CryptoJS.MD5(password).toString()}
+                    ]
+                }
+            })
+        if(user){
+            const token = jwtToken(login)
+            return {result:{token, login}};
+        }
+        return {result:'Unautorized'}
+    }
+    static async rename({newName,login}){
+            let answare = await Users.update(
+                { username: newName }, {
+                    where: {
+                        login
+                    }
+                }
+            )
+            logger.info(answare[0])
+            if(answare[0]){
+                return {result:'Sucsessifully renamed'}
             }
-            return 'Invalide user'
+            return {result:'Invalide user'}
 
 
     }

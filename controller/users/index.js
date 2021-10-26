@@ -1,18 +1,17 @@
 const Service = require('../../services/users/index')
 
 class Controller{
-    static hello(){
-        return Service.hello();
+    static async hello(){
+        return await Service.hello();
     }
-    static register({login, password, username}){
-        return Service.register({login, password, username})
-
+    static async register({login, password, username}){
+        return await Service.register({login, password, username})
     }
-    static login({login, password}){
-        return Service.login({login, password})
+    static async login({login, password}){
+        return await Service.login({login, password})
     }
-    static rename({ newName,login}){
-        return Service.rename({newName,login})
+    static async rename({ newName,login}){
+        return await Service.rename({newName,login})
     }
 }
 module.exports = Controller

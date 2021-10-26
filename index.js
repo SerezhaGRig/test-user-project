@@ -6,15 +6,18 @@ const router = require('./routers/users/index')
 const bodyParser = require('koa-bodyparser');
 const logger = require('./utils/logger')
 require("dotenv").config();
+const db = require('./models/index')
 
-logger.info("it will break marging")
 const port = process.env.PORT || 3000;
-
-app
-    .use(bodyParser())
-    .use(router.routes())
-    .use(router.allowedMethods())
-    .listen(port, function(){
-        logger.info(`Example app listening at http://localhost:${port}`)
-    })
+db.sequelize.sync({force:true}).then(
+    ()=>{
+        app
+            .use(bodyParser())
+            .use(router.routes())
+            .use(router.allowedMethods())
+            .listen(port, function(){
+                logger.info(`Example app listening at http://localhost:${port}`)
+            })
+    }
+)
 
