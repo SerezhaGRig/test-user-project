@@ -1,38 +1,55 @@
-const User = require('../../model/model')
 const {jwtToken}=require('../auth/jwt')
 const logger = require('../../utils/logger')
-const CryptoJS = require("crypto-js");
+const {Users} = require('../../models/index')
+const SeqErrorWrapper = require('../../errors/seqErrorWraper')
+const CustomError = require('../../errors/customError')
+const {Op} = require('sequelize')
 
 let users = {}
 
 class Service{
-    static hello(){
-        logger.info(users)
+    static async hello(){
         return 'Hello World!';
     }
-    static register({login, password, username}){
-        let user = new User(login, CryptoJS.MD5(password).toString(), username)
-        users[login]=user
+    static async register({login, password, username}){
+        try{
+            await Users.create({login, password, username});
+        }
+        catch (e) {
+            throw new SeqErrorWrapper(e)
+        }
         return "Congratulation"
     }
-    static login({login, password}){
-        let user = new User(login, CryptoJS.MD5(password).toString())
-        if(users[user.login] && users[user.login].password === user.password){
-            const token = jwtToken(login)
-            return {
-                token,
-                login
-            };
+    static async login({login, password}){
+        let user  = await Users.findOne({
+                where: {
+                    [Op.and]: [
+                        { login }
+                    ]
+                }
+            })
+        if(user===null){
+            throw new CustomError({code:401,message:'Unautorized'})
         }
-        return 'Unautorized'
+        if(user.validPassword(password)){
+            const token = jwtToken(login)
+            return {result:{token, login}};
+        }
+        throw new CustomError({code:401,message:'Uncorrect password'})
     }
-    static rename({newName,login}){
-            const user = users[login]
-            if(user){
-                user.username = newName;
+    static async rename({newName,login}){
+            let answare = await Users.update(
+                { username: newName }, {
+                    where: {
+                        login
+                    }
+                }
+            )
+            logger.info(answare[0])
+            if(answare[0]){
                 return 'Sucsessifully renamed'
             }
-            return 'Invalide user'
+            throw new CustomError({code:401,message:'Invalide user'})
 
 
     }

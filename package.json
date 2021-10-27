@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
     "email-validator": "^2.0.4",
@@ -18,8 +19,11 @@
     "koa-jwt": "^4.0.3",
     "koa-router": "^10.1.1",
     "password-validator": "^5.1.1",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
     "pino": "^7.0.3",
-    "pino-pretty": "^7.1.0"
+    "pino-pretty": "^7.1.0",
+    "sequelize": "^6.8.0"
   },
   "devDependencies": {
     "@types/koa-router": "^7.4.4"
