@@ -1,32 +1,42 @@
 const {jwtValidate}=require('../services/auth/jwt')
+const CustoError = require('../errors/customError')
+
+
+function errorHandler (ctx, e){
+    if(e.status)
+        ctx.status = e.status
+    ctx.body = e.message
+}
+function resultHandler (ctx, res){
+    ctx.body = res
+}
 
 module.exports = {
     authMiddleware: async (ctx, next) => {
         const authHeader = ctx.request.headers.authorization
         if (authHeader) {
-            const token = authHeader.slice(7);
+            const token = authHeader.split('Bearer ')[1]
             try {
                 const {sub} = jwtValidate(token)
                 ctx.request.sub = sub;
-                await next();
-            } catch (e) {
-                ctx.body = e.message;
+                return await next();
+            } catch {
+                throw new CustoError({code:401,message:"jwt authentification error"})
             }
 
         } else {
-            ctx.body = "auth header doesnt exist";
+            throw CustomError({code:401,message:"auth header doesnt exist"})
         }
-    },
-    errorMiddleware: async (ctx, next) => {
-        ctx.status = 404
-        ctx.body = ctx.myData.error.message
     },
     responseMiddleware: async (ctx, next) => {
-        if (ctx.myData.error) {
-            await next()
-        } else {
-            ctx.status = 200
-            ctx.body = ctx.myData.result
-        }
+            try {
+                let result = await next()
+                resultHandler(ctx, result)
+            }
+            catch (e){
+                errorHandler(ctx, e)
+            }
+
     }
+
 }

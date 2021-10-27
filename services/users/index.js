@@ -1,38 +1,41 @@
 const {jwtToken}=require('../auth/jwt')
 const logger = require('../../utils/logger')
-const CryptoJS = require("crypto-js");
 const {Users} = require('../../models/index')
+const SeqErrorWrapper = require('../../errors/seqErrorWraper')
+const CustomError = require('../../errors/customError')
 const {Op} = require('sequelize')
 
 let users = {}
 
 class Service{
     static async hello(){
-        return {result:'Hello World!'};
+        return 'Hello World!';
     }
     static async register({login, password, username}){
         try{
-            await Users.create({login, password:CryptoJS.MD5(password).toString(), username});
+            await Users.create({login, password, username});
         }
-        catch (e){
-            return {error:e}
+        catch (e) {
+            throw new SeqErrorWrapper(e)
         }
-        return {result:"Congratulation"}
+        return "Congratulation"
     }
     static async login({login, password}){
         let user  = await Users.findOne({
                 where: {
                     [Op.and]: [
-                        { login },
-                        { password:CryptoJS.MD5(password).toString()}
+                        { login }
                     ]
                 }
             })
-        if(user){
+        if(user===null){
+            throw new CustomError({code:401,message:'Unautorized'})
+        }
+        if(user.validPassword(password)){
             const token = jwtToken(login)
             return {result:{token, login}};
         }
-        return {result:'Unautorized'}
+        throw new CustomError({code:401,message:'Uncorrect password'})
     }
     static async rename({newName,login}){
             let answare = await Users.update(
@@ -44,9 +47,9 @@ class Service{
             )
             logger.info(answare[0])
             if(answare[0]){
-                return {result:'Sucsessifully renamed'}
+                return 'Sucsessifully renamed'
             }
-            return {result:'Invalide user'}
+            throw new CustomError({code:401,message:'Invalide user'})
 
 
     }
