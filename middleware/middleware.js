@@ -37,6 +37,12 @@ module.exports = {
                 errorHandler(ctx, e)
             }
 
+    },
+    loggedIn: async (ctx, next)=> {
+    if (ctx.isAuthenticated()) {
+       return await next();
     }
+    throw new CustoError({code:404,message:"Unautorized"})
+}
 
 }

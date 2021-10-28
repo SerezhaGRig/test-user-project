@@ -20,22 +20,8 @@ class Service{
         }
         return "Congratulation"
     }
-    static async login({login, password}){
-        let user  = await Users.findOne({
-                where: {
-                    [Op.and]: [
-                        { login }
-                    ]
-                }
-            })
-        if(user===null){
-            throw new CustomError({code:401,message:'Unautorized'})
-        }
-        if(user.validPassword(password)){
-            const token = jwtToken(login)
-            return {result:{token, login}};
-        }
-        throw new CustomError({code:401,message:'Uncorrect password'})
+    static async login(){
+        return 'you are logged in';
     }
     static async rename({newName,login}){
             let answare = await Users.update(
@@ -52,6 +38,9 @@ class Service{
             throw new CustomError({code:401,message:'Invalide user'})
 
 
+    }
+    static async logout(){
+        return 'you are logged out';
     }
 }
 

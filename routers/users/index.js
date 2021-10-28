@@ -2,10 +2,11 @@ const Router = require('koa-router');
 const Controller=require('../../controller/users/index')
 const validator = require("email-validator");
 const {jwtValidate} = require('../../services/auth/jwt')
-const {authMiddleware,responseMiddleware}= require('../../middleware/middleware')
+const {authMiddleware,responseMiddleware,loggedIn}= require('../../middleware/middleware')
 const CustomError = require('../../errors/customError')
 const passwordValidator = require("password-validator");
 const { Sequelize } = require('sequelize');
+const passport = require('../../services/auth/passportAuth')
 
 
 const router = new Router();
@@ -13,7 +14,7 @@ const schema = new passwordValidator();
 schema.is().min(8)
 
 
-router.get('/',responseMiddleware,authMiddleware, async (ctx, next) => {
+router.get('/',responseMiddleware,loggedIn, async (ctx, next) => {
     return await Controller.hello();
 })
 
@@ -29,16 +30,19 @@ router.post('/register',responseMiddleware, async (ctx, next) => {
     return  await Controller.register({login,  password, username });
 })
 
+router.post('/logout',responseMiddleware,async (ctx, next)=> {
+    ctx.logout()
+    return  await Controller.logout();
+})
 
-router.post('/login',responseMiddleware, async (ctx, next) => {
-    const { body:{ login, password } } = ctx.request;
-    return await Controller.login({login, password});
+router.post('/login',passport.authenticate('local'),responseMiddleware,async (ctx, next)=> {
+    return  await Controller.login();
 })
 
 
-router.post('/rename',responseMiddleware,authMiddleware, async (ctx, next) => {
+router.post('/rename',responseMiddleware,loggedIn, async (ctx, next) => {
     const { body:{ newName } } = ctx.request;
-    return await Controller.rename({login:ctx.request.sub, newName});
+    return await Controller.rename({login:ctx.state.user, newName});
 })
 
 
