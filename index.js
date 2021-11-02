@@ -9,16 +9,24 @@ require("dotenv").config();
 const db = require('./models/index')
 const passport = require('./services/auth/passportAuth')
 const session = require('koa-session')
+const cors = require('koa-cors');
+const proxy = require("koa-proxies");
 
 const port = process.env.PORT || 3000;
 const secret = process.env.SESSION_KEY || "another secret";
 
 db.sequelize.sync({force:true}).then(
     ()=>{
+        app.proxy=true
         app.keys = [secret]
         app
+              .use(cors({
+                  origin: 'http://localhost:3000',
+                 credentials:true,
+                 methods:['GET', 'PUT', 'POST']
+              }))
             .use(bodyParser())
-            .use(session({}, app))
+            .use(session({httpOnly: true,secure:false}, app))
             .use(passport.initialize())
             .use(passport.session())
             .use(router.routes())

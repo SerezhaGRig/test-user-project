@@ -1,14 +1,19 @@
 const {jwtValidate}=require('../services/auth/jwt')
 const CustoError = require('../errors/customError')
+const logger = require('../utils/logger')
 
 
 function errorHandler (ctx, e){
     if(e.status)
         ctx.status = e.status
+    logger.info( e.message)
     ctx.body = e.message
+
 }
 function resultHandler (ctx, res){
+    ctx.status=200
     ctx.body = res
+    logger.info( res)
 }
 
 module.exports = {
