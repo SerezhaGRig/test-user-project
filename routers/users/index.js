@@ -17,8 +17,6 @@ schema.is().min(8)
 router.get('/',responseMiddleware,loggedIn, async (ctx, next) => {
     return await Controller.hello();
 })
-
-
 router.post('/register',responseMiddleware, async (ctx, next) => {
     const { body:{ login, password, username } } = ctx.request;
      if(!validator.validate(login)){
