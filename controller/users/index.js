@@ -16,5 +16,11 @@ class Controller{
     static async logout(){
         return await Service.logout()
     }
+    static async add(){
+        return await Service.add({ brand, year, model,regnum, login })
+    }
+    static async getCars(){
+        return await Service.getCars()
+    }
 }
 module.exports = Controller

@@ -3,7 +3,7 @@ const logger = require('../../utils/logger')
 const {Users} = require('../../models/index')
 const SeqErrorWrapper = require('../../errors/seqErrorWraper')
 const CustomError = require('../../errors/customError')
-const {Op} = require('sequelize')
+const {Op,QueryType} = require('sequelize')
 
 let users = {}
 
@@ -41,6 +41,28 @@ class Service{
     }
     static async logout(){
         return 'you are logged out';
+    }
+    static async add({ brand, year, model,regnum, login }){
+
+        try{
+            let user  = await Users.findOne({where: {login}})
+            let model  = await Users.findOne({where:{model_name: model}})
+            await Cars.create({user_id:user.user_id,model_id:model.model_id,reg_num:regnum,pr_year:year});
+        }
+        catch (e) {
+            throw new SeqErrorWrapper(e)
+        }
+        return "Car Added"
+    }
+    static async getCars(){
+
+        try{
+            let cars  = await Cars.query("select cars.*,model_name from Cars inner join Models on Cars.Model_id = Models.model_id;")
+        }
+        catch (e) {
+            throw new SeqErrorWrapper(e)
+        }
+        return cars.toString()
     }
 }
 

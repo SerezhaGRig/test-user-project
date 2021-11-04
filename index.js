@@ -16,14 +16,16 @@ const port = process.env.PORT || 3000;
 const secret = process.env.SESSION_KEY || "another secret";
 
 db.sequelize.sync({force:true}).then(
-    ()=>{
+    async ()=>{
+        //await db['Brands'].create({brand_name:'BMW'})
+       // await db['Models'].create({model_name:'X5',brand_id:1})
         app.proxy=true
         app.keys = [secret]
         app
               .use(cors({
                   origin: 'http://localhost:3000',
-                 credentials:true,
-                 methods:['GET', 'PUT', 'POST']
+                  credentials:true,
+                  methods:['GET', 'PUT', 'POST']
               }))
             .use(bodyParser())
             .use(session({httpOnly: true,secure:false}, app))

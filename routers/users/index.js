@@ -33,6 +33,16 @@ router.post('/logout',responseMiddleware,async (ctx, next)=> {
     return  await Controller.logout();
 })
 
+router.post('/add',responseMiddleware,loggedIn,async (ctx, next)=> {
+    const { body:{ brand, year, model,regnum } } = ctx.request;
+    login = ctx.state.user
+    return  await Controller.add({ brand, year, model,regnum, login });
+})
+
+router.get('/cars',responseMiddleware,loggedIn,async (ctx, next)=> {
+    return  await Controller.getCars();
+})
+
 router.post('/login',passport.authenticate('local'),responseMiddleware,async (ctx, next)=> {
     return  await Controller.login();
 })
