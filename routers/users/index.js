@@ -15,7 +15,7 @@ schema.is().min(8)
 
 
 router.get('/',responseMiddleware,loggedIn, async (ctx, next) => {
-    return await Controller.hello();
+    return await Controller.hello({login:ctx.state.user});
 })
 router.post('/register',responseMiddleware, async (ctx, next) => {
     const { body:{ login, password, username } } = ctx.request;
@@ -33,10 +33,11 @@ router.post('/logout',responseMiddleware,async (ctx, next)=> {
     return  await Controller.logout();
 })
 
-router.post('/add',responseMiddleware,loggedIn,async (ctx, next)=> {
+router.post('/addCar',responseMiddleware,async (ctx, next)=> {
     const { body:{ brand, year, model,regnum } } = ctx.request;
     login = ctx.state.user
-    return  await Controller.add({ brand, year, model,regnum, login });
+    console.log(ctx.request.body)
+    return  await Controller.addCar({ brand, year, model,regnum, login });
 })
 
 router.get('/cars',responseMiddleware,loggedIn,async (ctx, next)=> {
@@ -53,5 +54,14 @@ router.post('/rename',responseMiddleware,loggedIn, async (ctx, next) => {
     return await Controller.rename({login:ctx.state.user, newName});
 })
 
+router.get('/brands',responseMiddleware, async (ctx, next) => {
+    return await Controller.getBrands();
+})
+
+router.get('/models/:brand',responseMiddleware, async (ctx, next) => {
+    console.log(ctx.params.brand)
+    let brand = ctx.params.brand;
+    return await Controller.getModelsByBrand({brand});
+})
 
 module.exports = router

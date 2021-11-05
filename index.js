@@ -17,8 +17,13 @@ const secret = process.env.SESSION_KEY || "another secret";
 
 db.sequelize.sync({force:true}).then(
     async ()=>{
-        //await db['Brands'].create({brand_name:'BMW'})
-       // await db['Models'].create({model_name:'X5',brand_id:1})
+        await db['Brands'].create({brand_name:'BMW'})
+        await db['Brands'].create({brand_name:'Mercedes'})
+        await db['Brands'].create({brand_name:'Audi'})
+        await db['Models'].create({model_name:'X5',brand_id:1})
+        await db['Models'].create({model_name:'C 300',brand_id:2})
+        await db['Models'].create({model_name:'C 320',brand_id:2})
+        await db['Models'].create({model_name:'A8',brand_id:3})
         app.proxy=true
         app.keys = [secret]
         app
