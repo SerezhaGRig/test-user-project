@@ -28,14 +28,14 @@ router.post('/register',responseMiddleware, async (ctx, next) => {
     return  await Controller.register({login,  password, username });
 })
 
-router.post('/logout',responseMiddleware,async (ctx, next)=> {
+router.post('/logout',responseMiddleware,loggedIn,async (ctx, next)=> {
     ctx.logout()
     return  await Controller.logout();
 })
 
-router.post('/addCar',responseMiddleware,async (ctx, next)=> {
+router.post('/addCar',responseMiddleware,loggedIn,async (ctx, next)=> {
     const { body:{ brand, year, model,regnum } } = ctx.request;
-    login = ctx.state.user
+    let login = ctx.state.user
     console.log(ctx.request.body)
     return  await Controller.addCar({ brand, year, model,regnum, login });
 })
@@ -54,14 +54,25 @@ router.post('/rename',responseMiddleware,loggedIn, async (ctx, next) => {
     return await Controller.rename({login:ctx.state.user, newName});
 })
 
-router.get('/brands',responseMiddleware, async (ctx, next) => {
+router.get('/brands',responseMiddleware,loggedIn, async (ctx, next) => {
     return await Controller.getBrands();
 })
 
-router.get('/models/:brand',responseMiddleware, async (ctx, next) => {
+router.get('/models/:brand',responseMiddleware,loggedIn, async (ctx, next) => {
     console.log(ctx.params.brand)
     let brand = ctx.params.brand;
     return await Controller.getModelsByBrand({brand});
+})
+router.get('/car/:id',responseMiddleware,loggedIn, async (ctx, next) => {
+    console.log(ctx.params.brand)
+    let carID = ctx.params.id;
+    return await Controller.getCarById({carID});
+})
+router.post('/upcar/:id',responseMiddleware,loggedIn, async (ctx, next) => {
+    let carID = ctx.params.id;
+    let login = ctx.state.user
+    const { body:{ brand, year, model,regnum } } = ctx.request;
+    return await Controller.updateCars({carID, brand, year, model,regnum, login });
 })
 
 module.exports = router

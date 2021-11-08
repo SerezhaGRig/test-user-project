@@ -1,9 +1,9 @@
 const {jwtToken}=require('../auth/jwt')
 const logger = require('../../utils/logger')
-const {Users,Brands,Models,Cars} = require('../../models/index')
+const {Users,Brands,Models,Cars,sequelize} = require('../../models/index')
 const SeqErrorWrapper = require('../../errors/seqErrorWraper')
 const CustomError = require('../../errors/customError')
-const {Op,QueryType} = require('sequelize')
+const {Op,QueryTypes} = require('sequelize')
 
 let users = {}
 
@@ -62,14 +62,19 @@ class Service{
     static async getCars(){
 
         try{
-            let cars  = await Cars.query("select cars.*,model_name,brand_name from Cars " +
-                "inner join Models on Cars.Model_id = Models.model_id " +
-                "inner join Bradns on Models.brand_id=Brands.brand_id;")
+             let cars  = await sequelize.query('select c.*,model_name,brand_name from public."Cars" as c '+
+             'inner join public."Models" as m on c.model_id = m.model_id ' +
+             'inner join public."Brands" as b on m.brand_id=b.brand_id;',{ type: QueryTypes.SELECT })
+            let response=[]
+            for(let car of cars){
+                let {createdAt,updatedAt,...another} = car
+                response.push(another)
+            }
+            return JSON.stringify(response)
         }
         catch (e) {
             throw new SeqErrorWrapper(e)
         }
-        return cars.toString()
     }
     static async getModelsByBrand({brand}){
 
@@ -104,13 +109,13 @@ class Service{
         }
         return brands.toString()
     }
-    static async updateCars({ brand, year, model,regnum, login }){
+    static async updateCars({carID, brand, year, model,regnum, login }){
         try{
             let user  = await Users.findOne({where: {login}})
-            let model  = await Models.findOne({where:{model_name: model}})
-            await Cars.update({model_id:model.model_id,reg_num:regnum,pr_year:year},{
+            let model_dbval  = await Models.findOne({where:{model_name: model}})
+            await Cars.update({model_id:model_dbval.model_id,reg_num:regnum,pr_year:year},{
                 where: {[Op.and]: [
-                {brand_id:brand.brand_id},
+                {car_id:carID},
                 {user_id:user.user_id }
             ]}
             })
@@ -118,7 +123,24 @@ class Service{
         catch (e) {
             throw new SeqErrorWrapper(e)
         }
-        return models.toString()
+        return "car updated";
+    }
+    static async getCarById({carID}){
+
+        try{
+            let cars  = await sequelize.query('select c.*,model_name,brand_name from public."Cars" as c '+
+                'inner join public."Models" as m on c.model_id = m.model_id ' +
+                'inner join public."Brands" as b on m.brand_id=b.brand_id where c.car_id = '+carID+' ;',{ type: QueryTypes.SELECT })
+            let response=[]
+            for(let car of cars){
+                let {createdAt,updatedAt,...another} = car
+                response.push(another)
+            }
+            return JSON.stringify(response)
+        }
+        catch (e) {
+            throw new SeqErrorWrapper(e)
+        }
     }
 }
 

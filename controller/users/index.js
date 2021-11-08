@@ -29,5 +29,13 @@ class Controller{
 
         return await Service.getModelsByBrand({brand})
     }
+    static async getCarById({carID}){
+
+        return await Service.getCarById({carID})
+    }
+    static async updateCars({carID, brand, year, model,regnum, login }){
+
+        return await Service.updateCars({carID, brand, year, model,regnum, login })
+    }
 }
 module.exports = Controller
