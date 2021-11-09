@@ -10,14 +10,25 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.5",
     "crypto-js": "^4.1.1",
-    "dotenv": "^10.0.0",
     "email-validator": "^2.0.4",
-    "koa": "^2.13.3",
-    "koa-bodyparser": "^4.3.0",
+    "eslint": "^8.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-prettier": "^4.0.0",
+    "koa-cookie": "^1.0.0",
+    "koa-cookie-parser": "^1.0.0",
+    "koa-cors": "^0.0.16",
     "koa-jwt": "^4.0.3",
+    "koa-passport": "^4.1.4",
+    "koa-proxies": "^0.12.1",
     "koa-router": "^10.1.1",
+    "koa-session": "^6.2.0",
+    "passport": "^0.5.0",
+    "passport-local": "^1.0.0",
     "password-validator": "^5.1.1",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
@@ -26,6 +37,13 @@
     "sequelize": "^6.8.0"
   },
   "devDependencies": {
-    "@types/koa-router": "^7.4.4"
+    "@types/koa-router": "^7.4.4",
+    "dotenv": "^10.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.25.2",
+    "jest": "^27.3.1",
+    "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0"
   }
 }

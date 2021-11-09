@@ -4,7 +4,11 @@
     "password": "seryozha",
     "database": "users",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "define": {
+      "timestamps": false
+    },
+    "logging": true
   },
   "test": {
     "username": "root",
