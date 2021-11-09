@@ -37,5 +37,9 @@ class Controller{
 
         return Service.updateCars({carID, brand, year, model,regnum, login })
     }
+    static async carsPage({pageId}){
+
+        return Service.carsPage({pageId})
+    }
 }
 module.exports = Controller

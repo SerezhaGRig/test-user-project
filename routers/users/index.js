@@ -77,4 +77,9 @@ router.post('/upcar/:id',authMiddleware, async (ctx, next) => {
     return Controller.updateCars({carID, brand, year, model,regnum, login });
 })
 
+router.get('/carp/:id',authMiddleware, async (ctx, next) => {
+    let pageId = ctx.params.id;
+    return Controller.carsPage({pageId});
+})
+
 module.exports = router
