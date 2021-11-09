@@ -20,22 +20,22 @@ class Controller{
         return await Service.addCar({ brand, year, model,regnum, login })
     }
     static async getCars(){
-        return await Service.getCars()
+        return Service.getCars()
     }
     static async getBrands(){
-        return await Service.getBrands()
+        return Service.getBrands()
     }
     static async getModelsByBrand({brand}){
 
-        return await Service.getModelsByBrand({brand})
+        return Service.getModelsByBrand({brand})
     }
     static async getCarById({carID}){
 
-        return await Service.getCarById({carID})
+        return Service.getCarById({carID})
     }
     static async updateCars({carID, brand, year, model,regnum, login }){
 
-        return await Service.updateCars({carID, brand, year, model,regnum, login })
+        return Service.updateCars({carID, brand, year, model,regnum, login })
     }
 }
 module.exports = Controller

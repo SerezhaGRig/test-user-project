@@ -23,15 +23,7 @@ module.exports = {
       reg_num: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
-        validate: {
-          isArmenian(value) {
-            let ver_regex = /^[0-9]{2}[a-z A-Z]{2}[0-9]{3}/
-            if(value.toString().search(ver_regex)===-1){
-              throw new CustomError({code:403,message:"Input value wasn't currect reg num"})
-            }
-          }
-        }
+        unique: true
       },
       pr_year:{
         type:Sequelize.STRING,

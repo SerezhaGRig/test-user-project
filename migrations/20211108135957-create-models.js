@@ -1,7 +1,5 @@
 'use strict';
-const bcrypt = require("bcrypt");
-const validator = require("email-validator");
-const CustomError = require('../errors/customError')
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("Models", {

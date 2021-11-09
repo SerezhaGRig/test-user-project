@@ -22,7 +22,7 @@ module.exports = function (sequelize, DataTypes) {
       validate: {
         isEmail(value) {
           if(!validator.validate(value)){
-            throw new CustomError({code:403,message:"Input value wasn't email"})
+            return false;
           }
         }
       }

@@ -1,5 +1,6 @@
 const {jwtValidate}=require('../services/auth/jwt')
 const CustoError = require('../errors/customError')
+const AuthError = require('../errors/authError')
 const logger = require('../utils/logger')
 
 
@@ -13,7 +14,7 @@ function errorHandler (ctx, e){
 function resultHandler (ctx, res){
     ctx.status=200
     ctx.body = res
-    logger.info( res)
+    logger.info(res)
 }
 
 module.exports = {
@@ -26,11 +27,11 @@ module.exports = {
                 ctx.request.sub = sub;
                 return await next();
             } catch {
-                throw new CustoError({code:401,message:"jwt authentification error"})
+                throw new AuthError("jwt authentification error")
             }
 
         } else {
-            throw CustomError({code:401,message:"auth header doesnt exist"})
+            throw AuthError("auth header doesnt exist")
         }
     },
     responseMiddleware: async (ctx, next) => {
@@ -43,11 +44,11 @@ module.exports = {
             }
 
     },
-    loggedIn: async (ctx, next)=> {
+    authMiddleware: async (ctx, next)=> {
     if (ctx.isAuthenticated()) {
        return await next();
     }
-    throw new CustoError({code:404,message:"Unautorized"})
+    throw new AuthError("Unautorized")
 }
 
 }

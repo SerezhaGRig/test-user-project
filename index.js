@@ -11,6 +11,7 @@ const passport = require('./services/auth/passportAuth')
 const session = require('koa-session')
 const cors = require('koa-cors');
 const proxy = require("koa-proxies");
+const {responseMiddleware}  = require('./middleware/middleware')
 
 const port = process.env.PORT || 3000;
 const secret = process.env.SESSION_KEY || "another secret";
@@ -19,7 +20,6 @@ app.proxy=true
 app.keys = [secret]
 app
       .use(cors({
-          origin: 'http://localhost:3000',
           credentials:true,
           methods:['GET', 'PUT', 'POST']
       }))
@@ -27,9 +27,9 @@ app
     .use(session({httpOnly: true,secure:false}, app))
     .use(passport.initialize())
     .use(passport.session())
+    .use(responseMiddleware)
     .use(router.routes())
     .use(router.allowedMethods())
     .listen(port, function(){
         logger.info(`Example app listening at http://localhost:${port}`)
     })
-
