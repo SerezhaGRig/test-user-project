@@ -142,6 +142,25 @@ class Service{
             throw new SeqErrorWrapper(e)
         }
     }
+    static async carsPage({pageId}){
+        const part = 5
+        let offset = (parseInt(pageId)-1)*5
+        try{
+            let cars  = await sequelize.query('select c.*,model_name,brand_name from public."Cars" as c '+
+                'inner join public."Models" as m on c.model_id = m.model_id ' +
+                `inner join public."Brands" as b on m.brand_id=b.brand_id offset ${offset} limit ${part};`,{ type: QueryTypes.SELECT })
+            let count  = await sequelize.query('SELECT Count(*) FROM public."Cars";',{ type: QueryTypes.SELECT })
+            let response=[]
+            for(let car of cars){
+                let {createdAt,updatedAt,...another} = car
+                response.push(another)
+            }
+            return JSON.stringify({rows:response,count})
+        }
+        catch (e) {
+            throw new SeqErrorWrapper(e)
+        }
+    }
 }
 
 module.exports = Service
